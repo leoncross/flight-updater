@@ -4,21 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test:unit": "mocha ./test/unit/** --recursive"
+    "test:unit": "mocha ./tests/unit/** --recursive"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
-    "chai": "^4.2.0",
-    "eslint": "^6.7.1",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-config-prettier": "^3.6.0",
-    "eslint-plugin-chai-friendly": "^0.4.1",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-mocha": "^5.2.1",
-    "eslint-plugin-prettier": "^3.0.1",
     "express": "^4.17.1",
+    "dotenv": "^8.2.0"
+  },
+  "devDependencies": {
     "grunt": "^1.0.3",
     "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-watch": "^1.1.0",
@@ -33,6 +28,14 @@
     "nyc": "^14.1.1",
     "prettier": "^1.18.2",
     "sinon": "^7.2.2",
-    "sinon-chai": "^3.3.0"
+    "sinon-chai": "^3.3.0",
+    "chai": "^4.2.0",
+    "eslint": "^6.7.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-prettier": "^3.6.0",
+    "eslint-plugin-chai-friendly": "^0.4.1",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-mocha": "^5.2.1",
+    "eslint-plugin-prettier": "^3.0.1"
   }
 }

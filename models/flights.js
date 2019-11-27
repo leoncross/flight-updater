@@ -1,0 +1,1 @@
+exports.get = flightCode => flightCode;

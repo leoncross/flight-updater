@@ -1,3 +1,5 @@
+const multiReporterConfigFile = 'config/mochaReporterConfig.json';
+
 module.exports = (grunt) => {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -11,10 +13,13 @@ module.exports = (grunt) => {
 
     mochaTest: {
       unit: {
-        src: ['test/unit/**/**.js'],
+        src: ['tests/unit/**/**.js'],
         options: {
           recursive: true,
           reporter: 'mocha-multi-reporters',
+          reporterOptions: {
+            configFile: multiReporterConfigFile,
+          },
         },
       },
     },
@@ -23,12 +28,12 @@ module.exports = (grunt) => {
       cover: {
         options: {
           cwd: '.',
-          include: ['src/**/*.js'],
+          include: ['**/*.js', '!.*.js', '!Gruntfile.js'],
           reporter: ['html', 'text'],
           all: true,
         },
         cmd: false,
-        args: ['mocha', 'test/unit/**/**.js', '--recursive'],
+        args: ['mocha', 'tests/unit/**/**.js', '--recursive'],
       },
     },
 
@@ -40,12 +45,12 @@ module.exports = (grunt) => {
         printWidth: 100,
       },
       files: {
-        src: ['src/**/*.js', 'test/**/**/*.js', '*.js', '!node_modules/**/**/*.js'],
+        src: ['**/*.js', 'test/**/**/*.js', '*.js', '!coverage/**', '!node_modules/**/**/*.js'],
       },
     },
 
     watch: {
-      files: ['src/**/*.js', 'test/**/*.js', 'config/**/*.js', 'index.js'],
+      files: ['src/**/*.js', 'test/**/*.js', 'config/**/*.js', 'app.js'],
       tasks: ['prettier', 'eslint', 'nyc'],
     },
   });

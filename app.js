@@ -18,3 +18,6 @@ app.listen(app.get('port'), () => {
 });
 
 module.exports = app;
+// require('dotenv').config()
+//
+// console.log(process.env.API_KEY);

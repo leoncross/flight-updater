@@ -48,14 +48,19 @@ describe('#flights controller', () => {
   it('res.json gets called with flightdetails in JSON format', (done) => {
     flightsModelGetStub.returns(flightDetails);
 
-    flights
-      .get(req, res)
-      .then(() => {
-        expect(res.json).calledOnceWith(flightDetails);
-        done();
-      })
-      .catch((err) => {
-        done(err);
-      });
+    flights.get(req, res).then(() => {
+      expect(res.json).calledOnceWith(flightDetails);
+      done();
+    });
+  });
+  it('handles error when flights model doesnt find the requested flight', (done) => {
+    const errorFlightDetails = new Error('Flight not found');
+
+    flightsModelGetStub.throws(errorFlightDetails);
+
+    flights.get(req, res).then(() => {
+      expect(res.json).calledOnceWith({ error: 'Flight not found' });
+      done();
+    });
   });
 });

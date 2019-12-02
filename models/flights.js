@@ -15,14 +15,14 @@ const formatUrl = (flightCode) => {
 const formatFlightData = (results) => {
   const flightData = results;
   const departureTime = new Date(flightData.departureTime);
-  flightData.departureTime = departureTime.toLocaleTimeString();
+  flightData.departureTime = departureTime.toLocaleTimeString().replace(/:\d{2}\s/, ' ');
 
   const localArrivalTime = new Date(flightData.localArrivalTime);
-  flightData.localArrivalTime = localArrivalTime.toLocaleTimeString();
+  flightData.localArrivalTime = localArrivalTime.toLocaleTimeString().replace(/:\d{2}\s/, ' ');
 
   const hours = Math.floor(flightData.flightDuration / 60);
   const minutes = flightData.flightDuration % 60;
-  flightData.flightDuration = `${hours}:${minutes}`;
+  flightData.flightDuration = { hours, minutes };
 
   return flightData;
 };
@@ -40,6 +40,7 @@ const cleanFetchResult = (data) => {
     flightDuration: data.flightStatuses[0].flightDurations.scheduledBlockMinutes,
   };
   const flightData = formatFlightData(results);
+  // jsonData = JSON.stringify(flightData)
   return flightData;
 };
 
@@ -56,3 +57,7 @@ exports.get = flightCode => new Promise((resolve, reject) => {
       return resolve(flightDetails);
     });
 });
+//
+// get('TOM052').then((data) => {
+//   console.log(data);
+// })

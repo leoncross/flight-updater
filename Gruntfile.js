@@ -13,7 +13,7 @@ module.exports = (grunt) => {
 
     mochaTest: {
       unit: {
-        src: ['tests/unit/**/**.js'],
+        src: ['tests/unit/**/**.js', 'tests/functional/**/**.js'],
         options: {
           recursive: true,
           reporter: 'mocha-multi-reporters',
@@ -33,7 +33,7 @@ module.exports = (grunt) => {
           all: true,
         },
         cmd: false,
-        args: ['mocha', 'tests/unit/**/**.js', '--recursive'],
+        args: ['mocha', 'tests/unit/**/**.js', 'tests/functional/**/**.js', '--recursive'],
       },
     },
 

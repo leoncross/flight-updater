@@ -7,7 +7,7 @@ const { expect } = chai;
 const flights = require('../../../controllers/flights');
 const flightsModel = require('../../../models/flights');
 
-describe('#flights controller', () => {
+describe('Flights controller', () => {
   const flightCode = 'AA1234';
   const gatwick = 'LGW';
   const flightDetails = {
@@ -29,10 +29,9 @@ describe('#flights controller', () => {
       },
     };
 
-    res = {
-      json: sinon.stub(),
-      status: sinon.stub(),
-    };
+    res = {};
+    res.json = sinon.stub().returns(res);
+    res.status = sinon.stub().returns(res);
   });
 
   afterEach(() => {

@@ -40,13 +40,13 @@ const cleanFetchResult = (data) => {
     flightDuration: data.flightStatuses[0].flightDurations.scheduledBlockMinutes,
   };
   const flightData = formatFlightData(results);
-  // jsonData = JSON.stringify(flightData)
   return flightData;
 };
 
 exports.get = flightCode => new Promise((resolve, reject) => {
-  const url = formatUrl(flightCode);
+  if (!flightCode) return reject(new Error('No flight code provided'));
 
+  const url = formatUrl(flightCode);
   fetch(url)
     .then(data => data.json())
     .then((data) => {
@@ -57,7 +57,3 @@ exports.get = flightCode => new Promise((resolve, reject) => {
       return resolve(flightDetails);
     });
 });
-//
-// get('TOM052').then((data) => {
-//   console.log(data);
-// })

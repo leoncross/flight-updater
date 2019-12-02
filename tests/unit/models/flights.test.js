@@ -42,6 +42,14 @@ describe('Flights model', () => {
     }
   });
 
+  it('throws an error when no flight code provided ', async () => {
+    try {
+      await flights.get();
+    } catch (err) {
+      expect(err.message).to.equal('No flight code provided');
+    }
+  });
+
   it('finds a flight with full details and returns expected format', async () => {
     const requestUrl = getUrl('TOM', '052');
 

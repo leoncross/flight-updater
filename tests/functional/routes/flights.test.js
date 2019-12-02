@@ -12,7 +12,7 @@ describe('Routes', () => {
       nock.cleanAll();
     });
 
-    it('with valid paramits returns 400 and flightDetails object', (done) => {
+    it('with valid params returns 200 and flightDetails object', (done) => {
       const requestUrl = getUrl('TOM', '052');
       const server = app.listen(8000);
       const flightDataTOM052 = {

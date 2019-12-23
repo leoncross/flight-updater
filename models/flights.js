@@ -47,7 +47,7 @@ exports.get = flightCode => new Promise((resolve, reject) => {
   if (!flightCode) return reject(new Error('No flight code provided'));
 
   const url = formatUrl(flightCode);
-  fetch(url)
+  return fetch(url)
     .then(data => data.json())
     .then((data) => {
       if (!data.flightStatuses[0]) {

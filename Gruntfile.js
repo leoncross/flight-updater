@@ -13,7 +13,17 @@ module.exports = (grunt) => {
 
     mochaTest: {
       unit: {
-        src: ['tests/unit/**/**.js', 'tests/functional/**/**.js'],
+        src: ['tests/unit/**/**.js'],
+        options: {
+          recursive: true,
+          reporter: 'mocha-multi-reporters',
+          reporterOptions: {
+            configFile: multiReporterConfigFile,
+          },
+        },
+      },
+      functional: {
+        src: ['tests/functional/**/**.js'],
         options: {
           recursive: true,
           reporter: 'mocha-multi-reporters',
@@ -63,7 +73,7 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-prettier');
 
-  grunt.registerTask('test', ['unit', 'nyc']);
+  grunt.registerTask('test', ['unit', 'functional', 'nyc']);
   grunt.registerTask('unit', ['mochaTest:unit']);
   grunt.registerTask('functional', ['mochaTest:functional']);
   grunt.registerTask('dev', ['prettier', 'eslint']);

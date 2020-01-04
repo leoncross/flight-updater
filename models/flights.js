@@ -50,6 +50,11 @@ exports.get = flightCode => new Promise((resolve, reject) => {
   return fetch(url)
     .then(data => data.json())
     .then((data) => {
+      
+      if(data.error) {
+        return reject(data.error)
+      }
+
       if (!data.flightStatuses[0]) {
         return reject(new Error('Flight not found'));
       }

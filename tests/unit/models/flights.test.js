@@ -27,27 +27,64 @@ describe('Flights model', () => {
     nock.cleanAll();
   });
 
-  it('doesnt find a flight and throws an error', async () => {
+  it('doesnt find a flight and returns error message', async () => {
     const requestUrl = getUrl('FR', '111');
+    const errorMsg = {
+      error: {
+        errorMessage: 'Flight not found',
+        errorCode: 2,
+      },
+    };
 
     const scope = nock(flightStatsUrl)
       .get(requestUrl)
       .reply(400, noFlightDataFound);
 
-    try {
-      await flights.get('FR111');
-    } catch (err) {
-      expect(err.message).to.equal('Flight not found');
+    await flights.get('FR111').then((data) => {
+      expect(data).to.deep.equal(errorMsg);
       expect(scope.isDone());
-    }
+    });
   });
 
-  it('throws an error when no flight code provided ', async () => {
-    try {
-      await flights.get();
-    } catch (err) {
-      expect(err.message).to.equal('No flight code provided');
-    }
+  it('handles instances when flightstats server throws an error', async () => {
+    const requestUrl = getUrl('FR', '111');
+    const errorMsg = {
+      error: {
+        errorMessage: 'application is not active',
+        errorCode: 'FORBIDDEN',
+      },
+    };
+
+    const error = {
+      error: {
+        httpStatusCode: 403,
+        errorId: '380025bc-444b-499c-b8fe-443bc7f29fa8',
+        errorMessage: 'application is not active',
+        errorCode: 'FORBIDDEN',
+      },
+    };
+
+    const scope = nock(flightStatsUrl)
+      .get(requestUrl)
+      .reply(400, error);
+
+    await flights.get('FR111').then((data) => {
+      expect(data).to.deep.equal(errorMsg);
+      expect(scope.isDone());
+    });
+  });
+
+  it('handles instances when no flight codes has been provided', async () => {
+    const errorMsg = {
+      error: {
+        errorMessage: 'No flight code provided',
+        errorCode: 1,
+      },
+    };
+
+    await flights.get().then((data) => {
+      expect(data).to.deep.equal(errorMsg);
+    });
   });
 
   it('finds a flight with full details and returns expected format', async () => {
@@ -69,9 +106,10 @@ describe('Flights model', () => {
       flightDuration: { hours: 10, minutes: 5 },
     };
 
-    const result = await flights.get('TOM052');
-    expect(result).to.deep.equal(actualData);
-    expect(scope.isDone());
+    await flights.get('TOM052').then((result) => {
+      expect(result).to.deep.equal(actualData);
+      expect(scope.isDone());
+    });
   });
 
   it('finds a flight without a terminal and returns expected format', async () => {
@@ -93,8 +131,9 @@ describe('Flights model', () => {
       flightDuration: { hours: 2, minutes: 45 },
     };
 
-    const result = await flights.get('FR111');
-    expect(result).to.deep.equal(actualData);
-    expect(scope.isDone());
+    await flights.get('FR111').then((result) => {
+      expect(result).to.deep.equal(actualData);
+      expect(scope.isDone());
+    });
   });
 });

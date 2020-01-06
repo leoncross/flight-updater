@@ -52,14 +52,18 @@ describe('Flights controller', () => {
       done();
     });
   });
-  it('handles error when flights model doesnt find the requested flight', (done) => {
-    const errorFlightDetails = new Error('Flight not found');
+  it('handles error when flights model doesnt find the requested flight', async () => {
+    const errorNotFound = {
+      error: {
+        errorMessage: 'Flight not found',
+        errorCode: 2,
+      },
+    };
 
-    flightsModelGetStub.throws(errorFlightDetails);
+    flightsModelGetStub.returns(errorNotFound);
 
-    flights.get(req, res).then(() => {
-      expect(res.json).calledOnceWith({ error: 'Flight not found' });
-      done();
+    await flights.get(req, res).then(() => {
+      expect(res.json).calledOnceWith(errorNotFound);
     });
   });
 });

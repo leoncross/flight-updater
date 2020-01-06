@@ -7,7 +7,7 @@ exports.get = async (req, res) => {
     flightDetails = await flights.get(flightCode);
     res.status(200);
   } catch (err) {
-    flightDetails = err
+    flightDetails = err;
     res.status(400);
   }
   res.json(flightDetails);

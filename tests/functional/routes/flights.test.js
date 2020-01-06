@@ -43,20 +43,60 @@ describe('Routes', () => {
         });
     });
 
-    it('with no flights found returns 400 and error object', (done) => {
+    it('with no flights found returns 200 and error object', (done) => {
       const requestUrl = getUrl('AAA', '111');
       const server = app.listen(8000);
-      const errorMsg = { error: 'Flight not found' };
-
+      const errorMsg = {
+        error: {
+          errorMessage: 'Flight not found',
+          errorCode: 2,
+        },
+      };
       nock(flightStatsUrl)
         .get(requestUrl)
-        .reply(400, noFlightDataFound);
+        .reply(200, noFlightDataFound);
 
       request(server)
         .post('/flights/AAA111')
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .expect(400)
+        .expect(200)
+        .expect(errorMsg)
+        .end((err) => {
+          server.close();
+          done(err);
+        });
+    });
+
+    it('returns error on server-side application is inactive', (done) => {
+      const requestUrl = getUrl('AAA', '111');
+      const server = app.listen(8000);
+
+      const error = {
+        error: {
+          httpStatusCode: 403,
+          errorId: '380025bc-444b-499c-b8fe-443bc7f29fa8',
+          errorMessage: 'application is not active',
+          errorCode: 'FORBIDDEN',
+        },
+      };
+
+      const errorMsg = {
+        error: {
+          errorMessage: 'application is not active',
+          errorCode: 'FORBIDDEN',
+        },
+      };
+
+      nock(flightStatsUrl)
+        .get(requestUrl)
+        .reply(200, error);
+
+      request(server)
+        .post('/flights/AAA111')
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(200)
         .expect(errorMsg)
         .end((err) => {
           server.close();

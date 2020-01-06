@@ -1,6 +1,13 @@
 require('dotenv').config();
 const fetch = require('node-fetch');
 
+const constructReturnMsg = (message, code) => ({
+  error: {
+    errorMessage: message,
+    errorCode: code,
+  },
+});
+
 const formatUrl = (flightCode) => {
   const baseUrl = 'https://api.flightstats.com/flex/flightstatus/rest/v2/json/flight/status/';
   const today = new Date();
@@ -43,20 +50,18 @@ const cleanFetchResult = (data) => {
   return flightData;
 };
 
-exports.get = flightCode => new Promise((resolve, reject) => {
-  if (!flightCode) return reject(new Error('No flight code provided'));
+exports.get = flightCode => new Promise((resolve) => {
+  if (!flightCode) return resolve(constructReturnMsg('No flight code provided', 1));
 
   const url = formatUrl(flightCode);
   return fetch(url)
     .then(data => data.json())
     .then((data) => {
-      
-      if(data.error) {
-        return reject(data.error)
+      if (data.error) {
+        return resolve(constructReturnMsg(data.error.errorMessage, data.error.errorCode));
       }
-
       if (!data.flightStatuses[0]) {
-        return reject(new Error('Flight not found'));
+        return resolve(constructReturnMsg('Flight not found', 2));
       }
       const flightDetails = cleanFetchResult(data);
       return resolve(flightDetails);

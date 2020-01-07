@@ -24,6 +24,13 @@ describe('Success E2E', () => {
             'gate',
             'flightDuration',
           ]);
+        expect(res.body.flightDuration)
+          .to.be.an.instanceOf(Object)
+          .that.includes.all.keys([
+            'hours',
+            'minutes'
+          ]);
+
       })
       .end((err) => {
         if (err) {

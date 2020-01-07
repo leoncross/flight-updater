@@ -14,7 +14,7 @@ describe('Error E2E', () => {
         expect(res.body)
           .to.be.an.instanceOf(Object)
           .that.includes.all.keys(['error']);
-        expect(res.body.error.errorMessage).to.equal('Invalid flightcode provided');
+        expect(res.body.error.errorMessage).to.equal('No flights found for provided flightcode');
         expect(res.body.error.errorCode).to.equal('BAD_REQUEST');
       })
       .end((err) => {

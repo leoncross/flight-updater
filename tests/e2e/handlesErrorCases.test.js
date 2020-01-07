@@ -50,8 +50,3 @@ describe('Error E2E', () => {
       });
   });
 }).timeout(10000);
-
-// { errorMessage: 'Invalid value for carrier: ASDF',
-//   errorCode: 'BAD_REQUEST' }
-
-// also just no flights found

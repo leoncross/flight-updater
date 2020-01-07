@@ -14,7 +14,7 @@ function handleErrorCases(data) {
   if (data.error) {
     return formatErrorMessage(data.error.errorMessage, data.error.errorCode);
   }
-  return formatErrorMessage('Invalid flightcode provided', 'BAD_REQUEST');
+  return formatErrorMessage('No flights found for provided flightcode', 'BAD_REQUEST');
 }
 
 function formatUrl(flightCode) {
@@ -74,8 +74,8 @@ exports.get = function get(flightCode) {
     if (!isValidFlightCode(flightCode)) {
       return resolve(formatErrorMessage('Invalid flightcode provided', 'BAD_REQUEST'));
     }
-
     const url = formatUrl(flightCode);
+
     return fetch(url)
       .then(data => data.json())
       .then((data) => {

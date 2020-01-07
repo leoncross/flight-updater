@@ -31,7 +31,7 @@ describe('Flights model', () => {
     const requestUrl = getUrl('FR', '111');
     const errorMsg = {
       error: {
-        errorMessage: 'Invalid flightcode provided',
+        errorMessage: 'No flights found for provided flightcode',
         errorCode: 'BAD_REQUEST',
       },
     };

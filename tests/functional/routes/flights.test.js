@@ -48,7 +48,7 @@ describe('Routes', () => {
       const server = app.listen(8000);
       const errorMsg = {
         error: {
-          errorMessage: 'Invalid flightcode provided',
+          errorMessage: 'No flights found for provided flightcode',
           errorCode: 'BAD_REQUEST',
         },
       };

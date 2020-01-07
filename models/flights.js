@@ -1,14 +1,23 @@
 require('dotenv').config();
 const fetch = require('node-fetch');
 
-const constructReturnMsg = (message, code) => ({
-  error: {
-    errorMessage: message,
-    errorCode: code,
-  },
-});
+function formatErrorMessage(message, code) {
+  return {
+    error: {
+      errorMessage: message,
+      errorCode: code,
+    },
+  };
+}
 
-const formatUrl = (flightCode) => {
+function handleErrorCases(data) {
+  if (data.error) {
+    return formatErrorMessage(data.error.errorMessage, data.error.errorCode);
+  }
+  return formatErrorMessage('Flight not found', 2);
+}
+
+function formatUrl(flightCode) {
   const baseUrl = 'https://api.flightstats.com/flex/flightstatus/rest/v2/json/flight/status/';
   const today = new Date();
   const airline = flightCode.replace(/[0-9]/g, '');
@@ -17,9 +26,9 @@ const formatUrl = (flightCode) => {
   const authentication = `appId=${process.env.API_APPID}&appKey=${process.env.API_KEY}`;
 
   return `${baseUrl}${airline}/${code}/dep/${dateFormatted}?${authentication}`;
-};
+}
 
-const formatFlightData = (results) => {
+function formatFlightData(results) {
   const flightData = results;
   const departureTime = new Date(flightData.departureTime);
   flightData.departureTime = departureTime.toLocaleTimeString().replace(/:\d{2}\s/, ' ');
@@ -32,9 +41,9 @@ const formatFlightData = (results) => {
   flightData.flightDuration = { hours, minutes };
 
   return flightData;
-};
+}
 
-const cleanFetchResult = (data) => {
+function cleanFetchResult(data) {
   const results = {
     flightcode: data.request.airline.fsCode + data.request.flight.requested,
     date: data.request.date.interpreted,
@@ -48,22 +57,20 @@ const cleanFetchResult = (data) => {
   };
   const flightData = formatFlightData(results);
   return flightData;
+}
+
+exports.get = function (flightCode) {
+  return new Promise((resolve) => {
+    if (!flightCode) return resolve(formatErrorMessage('No flight code provided', 1));
+    const url = formatUrl(flightCode);
+    return fetch(url)
+      .then(data => data.json())
+      .then((data) => {
+        if (data.error || !data.flightStatuses[0]) {
+          return resolve(handleErrorCases(data));
+        }
+        const flightDetails = cleanFetchResult(data);
+        return resolve(flightDetails);
+      });
+  });
 };
-
-exports.get = flightCode => new Promise((resolve) => {
-  if (!flightCode) return resolve(constructReturnMsg('No flight code provided', 1));
-
-  const url = formatUrl(flightCode);
-  return fetch(url)
-    .then(data => data.json())
-    .then((data) => {
-      if (data.error) {
-        return resolve(constructReturnMsg(data.error.errorMessage, data.error.errorCode));
-      }
-      if (!data.flightStatuses[0]) {
-        return resolve(constructReturnMsg('Flight not found', 2));
-      }
-      const flightDetails = cleanFetchResult(data);
-      return resolve(flightDetails);
-    });
-});

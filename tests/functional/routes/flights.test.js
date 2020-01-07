@@ -48,8 +48,8 @@ describe('Routes', () => {
       const server = app.listen(8000);
       const errorMsg = {
         error: {
-          errorMessage: 'Flight not found',
-          errorCode: 2,
+          errorMessage: 'Invalid flightcode provided',
+          errorCode: 'BAD_REQUEST',
         },
       };
       nock(flightStatsUrl)

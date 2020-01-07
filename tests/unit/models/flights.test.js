@@ -31,8 +31,8 @@ describe('Flights model', () => {
     const requestUrl = getUrl('FR', '111');
     const errorMsg = {
       error: {
-        errorMessage: 'Flight not found',
-        errorCode: 2,
+        errorMessage: 'Invalid flightcode provided',
+        errorCode: 'BAD_REQUEST',
       },
     };
 
@@ -74,15 +74,15 @@ describe('Flights model', () => {
     });
   });
 
-  it('handles instances when no flight codes has been provided', async () => {
+  it('handles incorrect flightcodes', async () => {
     const errorMsg = {
       error: {
-        errorMessage: 'No flight code provided',
-        errorCode: 1,
+        errorMessage: 'Invalid flightcode provided',
+        errorCode: 'BAD_REQUEST',
       },
     };
 
-    await flights.get().then((data) => {
+    await flights.get('EXAMPLE').then((data) => {
       expect(data).to.deep.equal(errorMsg);
     });
   });

@@ -1,6 +1,6 @@
 const flights = require('../models/flights');
 
-exports.get = async function (req, res) {
+exports.get = async function get(req, res) {
   const { flightCode } = req.params;
   let flightDetails;
   try {

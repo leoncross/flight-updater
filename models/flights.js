@@ -14,7 +14,7 @@ function handleErrorCases(data) {
   if (data.error) {
     return formatErrorMessage(data.error.errorMessage, data.error.errorCode);
   }
-  return formatErrorMessage('Flight not found', 2);
+  return formatErrorMessage('Invalid flightcode provided', 'BAD_REQUEST');
 }
 
 function formatUrl(flightCode) {
@@ -59,9 +59,22 @@ function cleanFetchResult(data) {
   return flightData;
 }
 
-exports.get = function (flightCode) {
+function isValidFlightCode(flightCode) {
+  const airline = flightCode.replace(/[0-9]/g, '');
+  const code = flightCode.replace(/[a-zA-Z]/g, '');
+
+  if (airline === '' || code === '') {
+    return false;
+  }
+  return true;
+}
+
+exports.get = function get(flightCode) {
   return new Promise((resolve) => {
-    if (!flightCode) return resolve(formatErrorMessage('No flight code provided', 1));
+    if (!isValidFlightCode(flightCode)) {
+      return resolve(formatErrorMessage('Invalid flightcode provided', 'BAD_REQUEST'));
+    }
+
     const url = formatUrl(flightCode);
     return fetch(url)
       .then(data => data.json())

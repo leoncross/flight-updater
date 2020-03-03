@@ -1,7 +1,7 @@
 const express = require('express');
+const flights = require('../controllers/flights');
 
 const router = express.Router();
-const flights = require('../controllers/flights');
 
 router.post('/:flightCode', flights.get);
 

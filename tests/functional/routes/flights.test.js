@@ -24,7 +24,7 @@ describe('Routes', () => {
         localArrivalTime: '2:50 PM',
         terminal: 'N',
         gate: '573',
-        flightDuration: { hours: 10, minutes: 5 },
+        duration: { hours: 10, minutes: 5 },
       };
 
       nock(flightStatsUrl)

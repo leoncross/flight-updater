@@ -21,7 +21,7 @@ describe('Flights controller', () => {
   let flightsModelGetStub;
 
   beforeEach(() => {
-    flightsModelGetStub = sinon.stub(flightsModel, 'get');
+    flightsModelGetStub = sinon.stub(flightsModel, 'getFlight');
 
     req = {
       params: {
@@ -38,14 +38,15 @@ describe('Flights controller', () => {
     sinon.restore();
   });
 
-  it('passes flightcode to flights.model', () => {
-    flights.get(req, res);
+  it('passes flightcode to flights.model', async () => {
+    flightsModelGetStub.resolves();
+    await flights.get(req, res);
 
     expect(flightsModelGetStub).calledOnceWith(req.params.flightCode);
   });
 
   it('res.json gets called with flightdetails in JSON format', (done) => {
-    flightsModelGetStub.returns(flightDetails);
+    flightsModelGetStub.resolves(flightDetails);
 
     flights.get(req, res).then(() => {
       expect(res.json).calledOnceWith(flightDetails);
@@ -60,7 +61,7 @@ describe('Flights controller', () => {
       },
     };
 
-    flightsModelGetStub.returns(errorNotFound);
+    flightsModelGetStub.rejects(errorNotFound);
 
     await flights.get(req, res).then(() => {
       expect(res.json).calledOnceWith(errorNotFound);

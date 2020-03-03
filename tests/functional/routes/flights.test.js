@@ -60,7 +60,7 @@ describe('Routes', () => {
         .post('/flights/AAA111')
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .expect(200)
+        .expect(400)
         .expect(errorMsg)
         .end((err) => {
           server.close();
@@ -96,7 +96,7 @@ describe('Routes', () => {
         .post('/flights/AAA111')
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .expect(200)
+        .expect(400)
         .expect(errorMsg)
         .end((err) => {
           server.close();

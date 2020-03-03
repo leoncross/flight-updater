@@ -40,8 +40,8 @@ describe('Flights model', () => {
       .get(requestUrl)
       .reply(400, noFlightDataFound);
 
-    await flights.get('FR111').then((data) => {
-      expect(data).to.deep.equal(errorMsg);
+    await flights.getFlight('FR111').catch((error) => {
+      expect(error).to.deep.equal(errorMsg);
       expect(scope.isDone());
     });
   });
@@ -68,7 +68,7 @@ describe('Flights model', () => {
       .get(requestUrl)
       .reply(400, error);
 
-    await flights.get('FR111').then((data) => {
+    await flights.getFlight('FR111').catch((data) => {
       expect(data).to.deep.equal(errorMsg);
       expect(scope.isDone());
     });
@@ -82,8 +82,8 @@ describe('Flights model', () => {
       },
     };
 
-    await flights.get('EXAMPLE').then((data) => {
-      expect(data).to.deep.equal(errorMsg);
+    await flights.getFlight('EXAMPLE').catch((err) => {
+      expect(err).to.deep.equal(errorMsg);
     });
   });
 
@@ -103,10 +103,10 @@ describe('Flights model', () => {
       localArrivalTime: '2:50 PM',
       terminal: 'N',
       gate: '573',
-      flightDuration: { hours: 10, minutes: 5 },
+      duration: { hours: 10, minutes: 5 },
     };
 
-    await flights.get('TOM052').then((result) => {
+    await flights.getFlight('TOM052').then((result) => {
       expect(result).to.deep.equal(actualData);
       expect(scope.isDone());
     });
@@ -128,10 +128,10 @@ describe('Flights model', () => {
       localArrivalTime: '9:40 AM',
       terminal: undefined,
       gate: 'C41',
-      flightDuration: { hours: 2, minutes: 45 },
+      duration: { hours: 2, minutes: 45 },
     };
 
-    await flights.get('FR111').then((result) => {
+    await flights.getFlight('FR111').then((result) => {
       expect(result).to.deep.equal(actualData);
       expect(scope.isDone());
     });

@@ -2,13 +2,12 @@ const flights = require('../models/flights');
 
 exports.get = async function get(req, res) {
   const { flightCode } = req.params;
-  let flightDetails;
-  try {
-    flightDetails = await flights.get(flightCode);
-    res.status(200);
-  } catch (err) {
-    flightDetails = err;
-    res.status(400);
-  }
-  res.json(flightDetails);
+
+  await flights.getFlight(flightCode)
+    .then((flightDetails) => {
+      res.status(200).json(flightDetails);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
 };
